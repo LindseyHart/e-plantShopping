@@ -1,15 +1,15 @@
-import React, { useState,useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
 import { addItem } from './CartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function ProductList() {
-    const [showCart, setShowCart] = useState(false); 
-    const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-    const [addedToCard, setAddedToCart] = useState({});
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart.items)
+    const [showCart, setShowCart] = useState(false); 
+    const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+    const [addedToCart, setAddedToCart] = useState([]);
 
     const plantsArray = [
         {
@@ -253,31 +253,29 @@ const handlePlantsClick = (e) => {
     setShowCart(false);
   };
 
-    const handleAddToCart = (product) => {
-        let found = false;
-        for (let item in cart){
-            if(cart[item].name === product.name){
-                found = true;
-            }
+  const handleAddToCart = (product) => {
+    let found = false;
+    for (let item in cart){
+        if(cart[item].name === product.name){
+            found = true;
         }
-        if(!found){
-            dispatch(addItem(product));
-            setAddedToCart((prevState) => ({
-                ...prevState,
-                [product.name]: true,
-            }));
-        }
-    };
-
-    const productQuantity = () => {
-        let quantity = 0;
-        for (let item in cart) {
-            quantity += cart[item].quantity;
-        }
-        return quantity;
-      }
-
-      return (
+    }
+    if(!found){
+        dispatch(addItem(product));
+        setAddedToCart((prevState) => ({
+            ...prevState,
+            [product.name]: true,
+        }));
+    }
+  }
+  const productQuantity = () => {
+    let quantity = 0;
+    for (let item in cart) {
+        quantity += cart[item].quantity;
+    }
+    return quantity;
+  }
+    return (
         <div>
              <div className="navbar" style={styleObj}>
             <div className="tag">
